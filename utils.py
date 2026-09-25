@@ -1,7 +1,6 @@
 import pandas as pd
 from pathlib import Path
-
-
+import re
 
 ## The follwoing Path configurations are used instead of a raw string as preventative measures for ipynb kernel OS Errors
 # when the CWD of the notebook does not recognize the presence of the /data directory
@@ -13,11 +12,6 @@ TARGET_DIR.mkdir(parents=True, exist_ok=True)
 
 TARGET_FILE_PATH = TARGET_DIR / "aggregated_report.csv"
 
-
-import re
-from pathlib import Path
-
-import pandas as pd
 
 ## The following Column mapping utility functions were sourced from ChatGPT, assuming this particular "transformation" is not under assessment
 ## Use disclosed incase the instruction team disagrees
