@@ -134,6 +134,8 @@ def aggregate_yearly_reports(csv_files):
 # To vizualize all metrics in a single bar plot, we normal the scale so that happiness's 0-10 scale does not 
 # visually dominate other metric's 0-1 scale
 def min_max_normalization(data, metrics, reference_df=None):
+
+    # TODO: Decide whether or not to keep this custom code or use SciKitLearn referenced in lecture
     result = data.copy()
 
     if reference_df is None:
@@ -150,3 +152,41 @@ def min_max_normalization(data, metrics, reference_df=None):
     ) / metric_range
 
     return result
+
+def create_gdp_quartile_df(df):
+
+    quartile_labels = [
+        "Q1: Lowest",
+        "Q2: Lower-middle",
+        "Q3: Upper-middle",
+        "Q4: Highest",
+    ]
+
+    # GDP percentile within each survey year
+    df["gdp_percentile"] = (
+        df.groupby("survey_year")["gdp_per_capita"]
+        .rank(method="average", pct=True)
+    )
+
+    # TODO: Review the quartile buckets 
+    df["gdp_quartile"] = pd.cut(
+        df["gdp_percentile"],
+        bins=[0, 0.25, 0.50, 0.75, 1.00],
+        labels=quartile_labels,
+        include_lowest=True,
+    )
+
+    df[
+        [
+            "country",
+            "survey_year",
+            "gdp_per_capita",
+            "gdp_percentile",
+            "gdp_quartile",
+        ]
+    ].sort_values(
+        ["survey_year", "gdp_per_capita"]
+    )
+
+    return df
+
